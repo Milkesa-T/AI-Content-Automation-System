@@ -1,0 +1,29 @@
+[
+  {
+    "id": "draft-1",
+    "created_at": "2026-10-20T20:14:47.090Z",
+    "topic": "New pizza promotion",
+    "platform": "Instagram",
+    "audience": "Young adults in Addis Ababa",
+    "tone": "Friendly and engaging",
+    "caption": "🍕 Pizza lovers of Addis, assemble! Our hottest new promotion just dropped and your taste buds aren't ready. 😋 From cheesy classics to spicy local twists, we're serving up the city's favorite slices at a special price. Perfect for your next chill session with the squad. Tag a friend who owes you a pizza date! 👇✨",
+    "hashtags": "#AddisFoodie #PizzaAddis #AddisAbaba #PizzaLover #HabeshaEats #NewInAddis",
+    "call_to_action": "Tap the link in our bio to grab this deal now! 📲",
+    "status": "Draft - Review Required",
+    "source": "n8n Workflow"
+  },
+  {
+    "id": "draft-1792564658718",
+    "created_at": "2026-10-21T06:37:38.718Z",
+    "topic": "Addis Specialty Coffee Tasting",
+    "platform": "Instagram",
+    "audience": "Young adults in Addis Ababa",
+    "tone": "Friendly and engaging",
+    "caption": "✨ Looking for something extraordinary? Introducing our latest campaign for Addis Specialty Coffee Tasting! Tailored specially for our amazing community in Young adults in Addis Ababa. Experience the difference with our high-quality service and unbeatable value. 🚀\n\n📌 (Verified against Brand Voice Guidelines & Compliance: Terms apply. Valid while supplies last.)",
+    "hashtags": "#AddisSpecialtyCoffeeTasting #Innovation #Instagram #AddisAbaba #Trending",
+    "call_to_action": "👉 Tap the link in bio or DM us right now to learn more!",
+    "status": "Draft - Review Required",
+    "source": "Local AI Engine + RAG Knowledge",
+    "usedRag": true
+  }
+]

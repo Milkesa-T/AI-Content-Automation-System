@@ -1,0 +1,23 @@
+[
+  {
+    "id": "kb-1",
+    "title": "Brand Voice & Local Culture (Addis Ababa)",
+    "category": "Tone & Cultural Resonance",
+    "content": "Addis Pizza Co. targets urban young adults (aged 18-35) in Addis Ababa, Ethiopia. Voice should be energetic, hospitable ('enqutatash' friendly vibe), featuring popular neighborhood references (Bole, Kazanchis, Piassa, Sarbet). Use lively emojis (🍕, 🔥, 😋). Emphasize authentic wood-fired crust and fresh local cheeses.",
+    "updated_at": "2026-10-20T22:00:00.000Z"
+  },
+  {
+    "id": "kb-2",
+    "title": "Social Media Format Guidelines",
+    "category": "Platform Rules",
+    "content": "For Instagram: Keep caption under 150 words, hook within the first 2 lines before the fold, exactly 4-6 hashtags placed at the bottom, and a clear call to action directing users to phone orders or link in bio. For LinkedIn: Professional tone, highlight business entrepreneurship, culinary quality, and workplace catering.",
+    "updated_at": "2026-10-20T22:00:00.000Z"
+  },
+  {
+    "id": "kb-3",
+    "title": "Offer Terms & Legal Compliance",
+    "category": "Compliance",
+    "content": "All promotional discounts must specify 'Valid while supplies last' or 'Terms apply'. Never make medical or absolute nutritional health claims. Direct all customer orders to phone hotline (+251-911-000000) or official delivery partners.",
+    "updated_at": "2026-10-20T22:00:00.000Z"
+  }
+]

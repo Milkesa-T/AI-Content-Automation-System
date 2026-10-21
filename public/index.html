@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContentStudio AI | Full-Stack Content Automation & RAG Platform</title>
+  <meta name="description" content="Production-ready AI Content Automation System with n8n Cloud integration, Google Gemini, and Brand Knowledge Base (RAG).">
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <span class="sparkle-icon">✨</span>
+        </div>
+        <div>
+          <h1 class="brand-title">ContentStudio<span class="gradient-text">.AI</span></h1>
+          <p class="brand-subtitle">Automated Social Pipeline & Human-in-the-Loop Review</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <div class="status-indicator">
+          <span class="pulse-dot"></span>
+          <span id="systemStatusText">n8n & Gemini Ready</span>
+        </div>
+        <button id="openSettingsBtn" class="btn btn-secondary btn-sm" aria-label="Open System Settings">
+          ⚙️ Settings & n8n Bridge
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs-wrapper" aria-label="Main Navigation">
+    <div class="tabs-container">
+      <button class="nav-tab active" data-tab="studioTab" id="tabStudio">
+        <span class="tab-icon">🎯</span> Campaign Studio
+      </button>
+      <button class="nav-tab" data-tab="draftsTab" id="tabDrafts">
+        <span class="tab-icon">📋</span> Review Station 
+        <span class="badge" id="draftCountBadge">0</span>
+      </button>
+      <button class="nav-tab" data-tab="ragTab" id="tabRag">
+        <span class="tab-icon">🧠</span> Brand Knowledge Base (RAG)
+      </button>
+      <button class="nav-tab" data-tab="docsTab" id="tabDocs">
+        <span class="tab-icon">📖</span> Architecture & Flow
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="app-main">
+    
+    <!-- TAB 1: CAMPAIGN STUDIO -->
+    <section id="studioTab" class="tab-content active">
+      <div class="studio-grid">
+        
+        <!-- Left: Form Card -->
+        <div class="glass-card form-card">
+          <div class="card-header">
+            <h2>Create New Campaign Draft</h2>
+            <p>Generate on-brand copy localized for your target audience</p>
+          </div>
+
+          <form id="campaignForm">
+            <!-- Topic -->
+            <div class="form-group">
+              <label for="topicInput">Campaign Topic / Offer *</label>
+              <input type="text" id="topicInput" placeholder="e.g. New pizza promotion" value="New pizza promotion" required>
+              <div class="topic-chips">
+                <span class="chip" data-topic="New pizza promotion">🍕 Pizza Promotion</span>
+                <span class="chip" data-topic="Addis Specialty Coffee Tasting">☕ Coffee Tasting</span>
+                <span class="chip" data-topic="Weekend Student Discount">🎓 Student Deal</span>
+                <span class="chip" data-topic="Late Night Delivery Service">🌙 Night Delivery</span>
+              </div>
+            </div>
+
+            <!-- Platform & Audience Row -->
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="platformSelect">Target Platform *</label>
+                <select id="platformSelect" required>
+                  <option value="Instagram" selected>📸 Instagram</option>
+                  <option value="LinkedIn">💼 LinkedIn</option>
+                  <option value="Facebook">👥 Facebook</option>
+                  <option value="X (Twitter)">🐦 X (Twitter)</option>
+                  <option value="TikTok">🎵 TikTok</option>
+                </select>
+              </div>
+
+              <div class="form-group flex-1">
+                <label for="toneSelect">Desired Tone *</label>
+                <select id="toneSelect" required>
+                  <option value="Friendly and engaging" selected>Friendly & Engaging</option>
+                  <option value="Professional & Authoritative">Professional & Authoritative</option>
+                  <option value="Punchy, Viral & High-Energy">Punchy, Viral & High-Energy</option>
+                  <option value="Humorous & Relatable">Humorous & Relatable</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Target Audience -->
+            <div class="form-group">
+              <label for="audienceInput">Target Audience & Location *</label>
+              <input type="text" id="audienceInput" placeholder="e.g. Young adults in Addis Ababa" value="Young adults in Addis Ababa" required>
+            </div>
+
+            <!-- RAG Context Injection Toggle -->
+            <div class="rag-switch-card">
+              <div class="switch-info">
+                <div class="switch-title">
+                  <span class="rag-badge">RAG Active</span>
+                  <strong>Inject Brand Knowledge Base</strong>
+                </div>
+                <p class="switch-desc">Grounds the AI with brand voice rules, Addis Ababa local culture, and legal compliance.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="useRagToggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button type="submit" id="generateBtn" class="btn btn-primary btn-block">
+                <span class="btn-spinner" id="btnSpinner" style="display: none;"></span>
+                <span class="btn-text" id="btnText">⚡ Synthesize Social Draft</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Real-time Live Preview Card -->
+        <div class="glass-card preview-card">
+          <div class="card-header space-between">
+            <div>
+              <h2>Live Post Preview</h2>
+              <p>Simulated social media render</p>
+            </div>
+            <div class="platform-indicator" id="previewPlatformBadge">Instagram</div>
+          </div>
+
+          <!-- Social Phone / Card Frame -->
+          <div class="social-mockup-frame">
+            <div class="mockup-header">
+              <div class="user-avatar">🍕</div>
+              <div class="user-meta">
+                <div class="user-handle">addis_pizza_co <span class="verified-badge">✓</span></div>
+                <div class="post-location" id="previewLocation">Addis Ababa, Ethiopia</div>
+              </div>
+              <span class="more-dots">•••</span>
+            </div>
+
+            <div class="mockup-media">
+              <div class="media-placeholder">
+                <span class="media-icon">🍕🔥</span>
+                <span class="media-tag">Dynamic AI Promo Creative</span>
+              </div>
+            </div>
+
+            <div class="mockup-body">
+              <div class="social-interactions">
+                <span>❤️ 2,419</span>
+                <span>💬 188</span>
+                <span>↗️ 340</span>
+                <span class="status-pill status-draft" id="previewStatus">Draft - Review Required</span>
+              </div>
+
+              <div class="post-caption-box">
+                <p id="previewCaptionText">
+                  🍕 Pizza lovers of Addis, assemble! Our hottest new promotion just dropped and your taste buds aren't ready. 😋 From cheesy classics to spicy local twists, we're serving up the city's favorite slices at a special price. Perfect for your next chill session with the squad. Tag a friend who owes you a pizza date! 👇✨
+                </p>
+              </div>
+
+              <div class="post-hashtags-box">
+                <p id="previewHashtagsText">#AddisFoodie #PizzaAddis #AddisAbaba #PizzaLover #HabeshaEats #NewInAddis</p>
+              </div>
+
+              <div class="post-cta-banner">
+                <strong>Call to Action:</strong>
+                <span id="previewCtaText">Tap the link in our bio to grab this deal now! 📲</span>
+              </div>
+            </div>
+
+            <div class="mockup-footer">
+              <span class="timestamp-label" id="previewTimestamp">Generated just now</span>
+            </div>
+          </div>
+
+          <!-- Quick Actions on Live Preview -->
+          <div class="preview-actions">
+            <button id="copyCaptionBtn" class="btn btn-secondary btn-sm">📋 Copy Caption</button>
+            <button id="quickApproveBtn" class="btn btn-success btn-sm">✅ Approve Draft</button>
+            <button id="quickRejectBtn" class="btn btn-danger btn-sm">❌ Reject</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: REVIEW STATION (GOVERNANCE DASHBOARD) -->
+    <section id="draftsTab" class="tab-content">
+      <div class="glass-card">
+        <div class="card-header space-between">
+          <div>
+            <h2>Marketing Content Pipeline & Audit Log</h2>
+            <p>Every AI draft is logged here with UTC timestamps before external publishing.</p>
+          </div>
+          <div class="header-filters">
+            <button id="refreshDraftsBtn" class="btn btn-secondary btn-sm">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="draftsTable">
+            <thead>
+              <tr>
+                <th>Created At (ISO)</th>
+                <th>Topic & Platform</th>
+                <th>Audience & Tone</th>
+                <th>Generated Caption Preview</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="draftsTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: BRAND KNOWLEDGE BASE (RAG CONTEXT) -->
+    <section id="ragTab" class="tab-content">
+      <div class="glass-card">
+        <div class="card-header space-between">
+          <div>
+            <h2>Brand Knowledge Base (RAG Context Store)</h2>
+            <p>Ground generative LLMs with persistent brand voice, local cultural idioms, and offer rules.</p>
+          </div>
+          <button id="openNewKnowledgeModalBtn" class="btn btn-primary btn-sm">+ Add Knowledge Doc</button>
+        </div>
+
+        <div class="knowledge-grid" id="knowledgeGrid">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: ARCHITECTURE & SYSTEM FLOW -->
+    <section id="docsTab" class="tab-content">
+      <div class="glass-card docs-card">
+        <div class="card-header">
+          <h2>Full-Stack System Architecture</h2>
+          <p>How the Web Client, Node.js Backend, n8n Cloud, Google Gemini, and Google Sheets interact</p>
+        </div>
+
+        <div class="diagram-container">
+          <div class="arch-flow">
+            <div class="arch-box client-box">
+              <span class="box-tag">Frontend</span>
+              <h3>Web UI Client</h3>
+              <p>Campaign input, Live preview, Human Review, RAG manager</p>
+            </div>
+            <div class="arch-arrow">➔</div>
+            <div class="arch-box backend-box">
+              <span class="box-tag">Backend</span>
+              <h3>Express / Node.js</h3>
+              <p>RAG context retrieval, Drafts CRUD, Webhook proxy</p>
+            </div>
+            <div class="arch-arrow">➔</div>
+            <div class="arch-box n8n-box">
+              <span class="box-tag">iPaaS Orchestrator</span>
+              <h3>n8n Cloud</h3>
+              <p>LangChain Basic LLM Chain + Code Normalizer</p>
+            </div>
+            <div class="arch-arrow">➔</div>
+            <div class="arch-box gemini-box">
+              <span class="box-tag">LLM Engine</span>
+              <h3>Google Gemini 1.5</h3>
+              <p>Structured JSON copy synthesis</p>
+            </div>
+            <div class="arch-arrow">➔</div>
+            <div class="arch-box sheets-box">
+              <span class="box-tag">Data Store</span>
+              <h3>Google Sheets</h3>
+              <p>Audit logging with "Draft - Review Required"</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="docs-grid">
+          <div class="doc-item">
+            <h3>What is RAG in this Project?</h3>
+            <p><strong>Retrieval-Augmented Generation (RAG)</strong> enriches the AI's prompt with custom business guidelines (e.g. Addis Ababa local neighborhoods, hashtag limits, legal disclaimers) stored in the knowledge base, ensuring the output never sounds like generic copy.</p>
+          </div>
+          <div class="doc-item">
+            <h3>Human-in-the-Loop (HITL) Governance</h3>
+            <p>No draft is ever automatically published. Every record is stored with <code>status: 'Draft - Review Required'</code>, allowing marketing directors to inspect, edit, and click <strong>Approve</strong> or <strong>Reject</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>System Settings & Integration Bridge</h3>
+        <button class="close-modal-btn" id="closeSettingsModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="n8nWebhookInput">n8n Cloud Webhook URL (Optional)</label>
+          <input type="url" id="n8nWebhookInput" placeholder="https://your-n8n-instance.app.n8n.cloud/webhook/generate-content">
+          <small class="helper-text">If set, the app triggers your n8n workflow directly via HTTP webhook!</small>
+        </div>
+
+        <div class="form-group">
+          <label for="directGeminiKeyInput">Google Gemini API Key (Direct Fallback)</label>
+          <input type="password" id="directGeminiKeyInput" placeholder="AIzaSy...">
+          <small class="helper-text">Used if n8n Cloud is offline or webhook is not configured.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveSettingsBtn" class="btn btn-primary">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Knowledge Document Modal -->
+  <div class="modal-backdrop" id="knowledgeModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add Brand Knowledge Document</h3>
+        <button class="close-modal-btn" id="closeKnowledgeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="kbTitleInput">Title *</label>
+          <input type="text" id="kbTitleInput" placeholder="e.g. Bole Branch Promotional Hours" required>
+        </div>
+        <div class="form-group">
+          <label for="kbCategoryInput">Category *</label>
+          <select id="kbCategoryInput">
+            <option value="Tone & Cultural Resonance">Tone & Cultural Resonance</option>
+            <option value="Platform Rules">Platform Rules</option>
+            <option value="Compliance">Compliance & Legal</option>
+            <option value="Product Specs">Product Specs</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kbContentInput">Content / Rules *</label>
+          <textarea id="kbContentInput" rows="4" placeholder="Enter brand guidelines or specific instructions to ground the AI model..." required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveKnowledgeBtn" class="btn btn-primary">Add Document</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
