@@ -1,19 +1,17 @@
 {
   "name": "ai-content-automation-sys",
   "version": "1.0.0",
-  "description": "Full-Stack AI Content Automation System with n8n Cloud, Google Gemini, and Brand Knowledge Base (RAG)",
-  "main": "server.js",
+  "description": "Full-Stack AI Content Automation System with Next.js, n8n Cloud, Google Gemini, and Brand Knowledge Base (RAG)",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend run start",
+    "lint": "npm --prefix frontend run lint"
   },
   "keywords": [
     "ai",
     "n8n",
+    "nextjs",
     "content-automation",
     "gemini",
     "rag",
