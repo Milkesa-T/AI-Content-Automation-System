@@ -22,8 +22,22 @@
     "caption": "✨ Looking for something extraordinary? Introducing our latest campaign for Addis Specialty Coffee Tasting! Tailored specially for our amazing community in Young adults in Addis Ababa. Experience the difference with our high-quality service and unbeatable value. 🚀\n\n📌 (Verified against Brand Voice Guidelines & Compliance: Terms apply. Valid while supplies last.)",
     "hashtags": "#AddisSpecialtyCoffeeTasting #Innovation #Instagram #AddisAbaba #Trending",
     "call_to_action": "👉 Tap the link in bio or DM us right now to learn more!",
-    "status": "Draft - Review Required",
+    "status": "Approved",
     "source": "Local AI Engine + RAG Knowledge",
+    "usedRag": true
+  },
+  {
+    "id": "draft-1792569873776",
+    "created_at": "2026-10-21T08:04:33.776Z",
+    "topic": "New pizza promotion",
+    "platform": "Instagram",
+    "audience": "Young adults in Addis Ababa",
+    "tone": "Friendly and engaging",
+    "caption": "🍕 Craving the crispiest wood-fired crust in town? Addis, we've got you covered! Gather the squad and feast on our sizzling specials topped with fresh local ingredients. 😋🔥 Every bite is pure joy.\n\n📌 (Verified against Brand Voice Guidelines & Compliance: Terms apply. Valid while supplies last.)",
+    "hashtags": "#AddisEats #PizzaLovers #BoleFoodie #AddisAbaba #TasteOfAddis #PizzaTime",
+    "call_to_action": "📲 Call +251-911-000000 or tap the link in bio to claim your 20% discount today!",
+    "status": "Draft - Review Required",
+    "source": "Next.js AI Engine + RAG Knowledge",
     "usedRag": true
   }
 ]

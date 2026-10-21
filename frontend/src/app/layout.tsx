@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'ContentStudio.AI | Next.js Content Automation & RAG',
+  title: 'ContentStudio.AI | Automated Social Pipeline & RAG',
   description: 'Production-ready AI Content Automation System with n8n Cloud integration, Google Gemini, and Brand Knowledge Base (RAG).',
 };
 

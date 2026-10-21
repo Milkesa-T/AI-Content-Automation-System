@@ -33,7 +33,7 @@ interface Toast {
 
 export default function HomePage() {
   // Tabs
-  const [activeTab, setActiveTab] = useState<'studio' | 'drafts' | 'rag' | 'docs'>('studio');
+  const [activeTab, setActiveTab] = useState<'studio' | 'drafts' | 'rag'>('studio');
 
   // Form State
   const [topic, setTopic] = useState('New pizza promotion');
@@ -130,13 +130,13 @@ export default function HomePage() {
       const data = await res.json();
       if (data.success && data.draft) {
         setCurrentDraft(data.draft);
-        addToast(`Draft generated via ${data.provider}!`, 'success');
+        addToast(`Draft generated via ${data.provider}`, 'success');
         fetchDrafts();
       } else {
-        addToast('Generation failed.', 'error');
+        addToast('Generation request failed.', 'error');
       }
     } catch (err) {
-      addToast('Error communicating with API.', 'error');
+      addToast('Error communicating with backend service.', 'error');
     } finally {
       setLoading(false);
     }
@@ -151,7 +151,7 @@ export default function HomePage() {
         body: JSON.stringify({ id, status: newStatus })
       });
       if (res.ok) {
-        addToast(`Marked as ${newStatus}`, 'success');
+        addToast(`Draft marked as ${newStatus}`, 'success');
         fetchDrafts();
         if (currentDraft && currentDraft.id === id) {
           setCurrentDraft({ ...currentDraft, status: newStatus });
@@ -166,7 +166,7 @@ export default function HomePage() {
   const handleDeleteDraft = async (id: string) => {
     try {
       await fetch(`/api/drafts?id=${id}`, { method: 'DELETE' });
-      addToast('Draft removed', 'info');
+      addToast('Draft removed from pipeline', 'info');
       fetchDrafts();
     } catch (err) {
       addToast('Error deleting draft', 'error');
@@ -178,13 +178,13 @@ export default function HomePage() {
     if (!currentDraft) return;
     const text = `${currentDraft.caption}\n\n${currentDraft.hashtags}\n\n${currentDraft.call_to_action}`;
     navigator.clipboard.writeText(text);
-    addToast('Post copied to clipboard!', 'success');
+    addToast('Post text copied to clipboard', 'success');
   };
 
   // Add Knowledge Doc
   const handleAddKnowledge = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newKbTitle || !newKbContent) return addToast('Please fill out all fields', 'error');
+    if (!newKbTitle || !newKbContent) return addToast('Please complete all required fields', 'error');
 
     try {
       const res = await fetch('/api/knowledge', {
@@ -198,26 +198,26 @@ export default function HomePage() {
       });
 
       if (res.ok) {
-        addToast('Brand Knowledge Added for RAG!', 'success');
+        addToast('Brand knowledge document added', 'success');
         setShowAddKnowledge(false);
         setNewKbTitle('');
         setNewKbContent('');
         fetchKnowledge();
       }
     } catch (err) {
-      addToast('Failed to save knowledge doc', 'error');
+      addToast('Failed to save knowledge document', 'error');
     }
   };
 
   // Delete Knowledge Doc
   const handleDeleteKnowledge = async (id: string) => {
-    if (!confirm('Delete this knowledge document?')) return;
+    if (!confirm('Are you sure you want to remove this knowledge document?')) return;
     try {
       await fetch(`/api/knowledge?id=${id}`, { method: 'DELETE' });
       addToast('Knowledge document deleted', 'info');
       fetchKnowledge();
     } catch (err) {
-      addToast('Error deleting doc', 'error');
+      addToast('Error deleting document', 'error');
     }
   };
 
@@ -226,7 +226,7 @@ export default function HomePage() {
     localStorage.setItem('cs_n8n_webhook', n8nWebhook.trim());
     localStorage.setItem('cs_gemini_key', geminiKey.trim());
     setShowSettings(false);
-    addToast('Settings saved successfully!', 'success');
+    addToast('Configuration settings updated', 'success');
   };
 
   return (
@@ -235,22 +235,21 @@ export default function HomePage() {
       <header className="app-header">
         <div className="header-container">
           <div className="brand">
-            <div className="brand-icon">✨</div>
             <div>
               <h1 className="brand-title">
-                ContentStudio<span className="gradient-text">.AI</span> (Next.js)
+                ContentStudio<span className="gradient-text">.AI</span>
               </h1>
-              <p className="brand-subtitle">Automated Social Pipeline, RAG Knowledge & HITL Governance</p>
+              <p className="brand-subtitle">Automated Content Pipeline & Human-in-the-Loop Governance</p>
             </div>
           </div>
 
           <div className="header-actions">
             <div className="status-indicator">
               <span className="pulse-dot"></span>
-              <span>Next.js & n8n Ready</span>
+              <span>System Online</span>
             </div>
             <button onClick={() => setShowSettings(true)} className="btn btn-secondary btn-sm">
-              ⚙️ Settings & n8n Bridge
+              Settings & Integrations
             </button>
           </div>
         </div>
@@ -263,25 +262,19 @@ export default function HomePage() {
             className={`nav-tab ${activeTab === 'studio' ? 'active' : ''}`}
             onClick={() => setActiveTab('studio')}
           >
-            🎯 Campaign Studio
+            Campaign Studio
           </button>
           <button
             className={`nav-tab ${activeTab === 'drafts' ? 'active' : ''}`}
             onClick={() => setActiveTab('drafts')}
           >
-            📋 Review Station <span className="badge">{drafts.length}</span>
+            Review Station <span className="badge">{drafts.length}</span>
           </button>
           <button
             className={`nav-tab ${activeTab === 'rag' ? 'active' : ''}`}
             onClick={() => setActiveTab('rag')}
           >
-            🧠 Brand Knowledge Base (RAG)
-          </button>
-          <button
-            className={`nav-tab ${activeTab === 'docs' ? 'active' : ''}`}
-            onClick={() => setActiveTab('docs')}
-          >
-            📖 Architecture & Flow
+            Brand Knowledge Base
           </button>
         </div>
       </nav>
@@ -294,13 +287,13 @@ export default function HomePage() {
             {/* Form */}
             <div className="glass-card">
               <div className="card-header">
-                <h2>Create New Campaign Draft</h2>
-                <p>Synthesize on-brand copy localized for your target audience</p>
+                <h2>Campaign Generator</h2>
+                <p>Define parameters to generate localized, on-brand marketing copy</p>
               </div>
 
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>Campaign Topic / Offer *</label>
+                  <label>Campaign Topic / Objective</label>
                   <input
                     type="text"
                     value={topic}
@@ -309,38 +302,38 @@ export default function HomePage() {
                     required
                   />
                   <div className="topic-chips">
-                    <span className="chip" onClick={() => setTopic('New pizza promotion')}>🍕 Pizza Promotion</span>
-                    <span className="chip" onClick={() => setTopic('Addis Specialty Coffee Tasting')}>☕ Coffee Tasting</span>
-                    <span className="chip" onClick={() => setTopic('Weekend Student Discount')}>🎓 Student Deal</span>
-                    <span className="chip" onClick={() => setTopic('Late Night Delivery Service')}>🌙 Night Delivery</span>
+                    <span className="chip" onClick={() => setTopic('New pizza promotion')}>Pizza Promotion</span>
+                    <span className="chip" onClick={() => setTopic('Addis Specialty Coffee Tasting')}>Coffee Tasting</span>
+                    <span className="chip" onClick={() => setTopic('Weekend Student Discount')}>Student Discount</span>
+                    <span className="chip" onClick={() => setTopic('Late Night Delivery Service')}>Late Night Delivery</span>
                   </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group flex-1">
-                    <label>Target Platform *</label>
+                    <label>Target Platform</label>
                     <select value={platform} onChange={e => setPlatform(e.target.value)} required>
-                      <option value="Instagram">📸 Instagram</option>
-                      <option value="LinkedIn">💼 LinkedIn</option>
-                      <option value="Facebook">👥 Facebook</option>
-                      <option value="X (Twitter)">🐦 X (Twitter)</option>
-                      <option value="TikTok">🎵 TikTok</option>
+                      <option value="Instagram">Instagram</option>
+                      <option value="LinkedIn">LinkedIn</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="X (Twitter)">X (Twitter)</option>
+                      <option value="TikTok">TikTok</option>
                     </select>
                   </div>
 
                   <div className="form-group flex-1">
-                    <label>Desired Tone *</label>
+                    <label>Brand Tone</label>
                     <select value={tone} onChange={e => setTone(e.target.value)} required>
                       <option value="Friendly and engaging">Friendly & Engaging</option>
                       <option value="Professional & Authoritative">Professional & Authoritative</option>
-                      <option value="Punchy, Viral & High-Energy">Punchy & Viral</option>
+                      <option value="Punchy, Viral & High-Energy">Punchy & High-Energy</option>
                       <option value="Humorous & Relatable">Humorous & Relatable</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Target Audience & Location *</label>
+                  <label>Target Audience & Location</label>
                   <input
                     type="text"
                     value={audience}
@@ -354,11 +347,11 @@ export default function HomePage() {
                 <div className="rag-switch-card">
                   <div className="switch-info">
                     <div className="switch-title">
-                      <span className="rag-badge">RAG Active</span>
-                      <strong>Inject Brand Knowledge Base</strong>
+                      <span className="rag-badge">RAG</span>
+                      <strong>Brand Knowledge Retrieval</strong>
                     </div>
                     <p className="switch-desc">
-                      Grounds the AI with brand rules, Addis Ababa cultural context, and legal compliance.
+                      Enrich generation with stored brand voice guidelines, local cultural references, and legal compliance.
                     </p>
                   </div>
                   <label className="toggle-switch">
@@ -374,10 +367,10 @@ export default function HomePage() {
                 <button type="submit" disabled={loading} className="btn btn-primary btn-block">
                   {loading ? (
                     <>
-                      <span className="btn-spinner"></span> Synthesizing with RAG...
+                      <span className="btn-spinner"></span> Generating Draft...
                     </>
                   ) : (
-                    '⚡ Synthesize Social Draft'
+                    'Generate Draft'
                   )}
                 </button>
               </form>
@@ -387,21 +380,21 @@ export default function HomePage() {
             <div className="glass-card">
               <div className="card-header space-between">
                 <div>
-                  <h2>Live Post Preview</h2>
-                  <p>Simulated social media render</p>
+                  <h2>Post Preview</h2>
+                  <p>Rendered post draft layout</p>
                 </div>
                 <div className="badge">{platform}</div>
               </div>
 
               <div className="social-mockup-frame">
                 <div className="mockup-header">
-                  <div className="user-avatar">🍕</div>
+                  <div className="user-avatar-monogram">AP</div>
                   <div className="user-meta">
                     <div className="user-handle">
-                      addis_brand_hub <span className="verified-badge">✓</span>
+                      addis_brand <span className="verified-dot">●</span>
                     </div>
                     <div className="post-location">
-                      {audience.includes('Addis') ? 'Addis Ababa, Ethiopia' : 'Global Audience'}
+                      {audience.includes('Addis') ? 'Addis Ababa, Ethiopia' : 'Target Region'}
                     </div>
                   </div>
                   <span className="more-dots">•••</span>
@@ -409,16 +402,15 @@ export default function HomePage() {
 
                 <div className="mockup-media">
                   <div className="media-placeholder">
-                    <span className="media-icon">🍕🔥</span>
-                    <span className="media-tag">Dynamic AI Promo Creative</span>
+                    <span className="media-tag">Campaign Creative Asset</span>
                   </div>
                 </div>
 
                 <div className="mockup-body">
                   <div className="social-interactions">
-                    <span>❤️ 2,419</span>
-                    <span>💬 188</span>
-                    <span>↗️ 340</span>
+                    <span>2,419 Likes</span>
+                    <span>188 Comments</span>
+                    <span>340 Shares</span>
                     <span
                       className={`status-pill ${
                         currentDraft?.status.includes('Approved')
@@ -435,7 +427,7 @@ export default function HomePage() {
                   <div className="post-caption-box">
                     <p>
                       {currentDraft?.caption ||
-                        "🍕 Pizza lovers of Addis, assemble! Our hottest new promotion just dropped and your taste buds aren't ready. 😋 From cheesy classics to spicy local twists, we're serving up the city's favorite slices at a special price. Perfect for your next chill session with the squad. Tag a friend who owes you a pizza date! 👇✨"}
+                        "Pizza lovers of Addis, assemble! Our new promotion just dropped. From cheesy classics to spicy local twists, we're serving up the city's favorite slices at a special price. Perfect for your next gathering with friends."}
                     </p>
                   </div>
 
@@ -448,22 +440,22 @@ export default function HomePage() {
 
                   <div className="post-cta-banner">
                     <strong>Call to Action:</strong>{' '}
-                    <span>{currentDraft?.call_to_action || 'Tap the link in our bio to grab this deal now! 📲'}</span>
+                    <span>{currentDraft?.call_to_action || 'Tap the link in our bio to order today!'}</span>
                   </div>
                 </div>
 
                 <div className="mockup-footer">
                   <span className="timestamp-label">
                     {currentDraft?.created_at
-                      ? `Generated: ${new Date(currentDraft.created_at).toLocaleTimeString()}`
-                      : 'Generated just now'}
+                      ? `Generated: ${new Date(currentDraft.created_at).toLocaleString()}`
+                      : 'Generated recently'}
                   </span>
                 </div>
               </div>
 
               <div className="preview-actions">
                 <button onClick={handleCopy} className="btn btn-secondary btn-sm">
-                  📋 Copy Caption
+                  Copy Text
                 </button>
                 {currentDraft && (
                   <>
@@ -471,13 +463,13 @@ export default function HomePage() {
                       onClick={() => handleUpdateStatus(currentDraft.id, 'Approved')}
                       className="btn btn-success btn-sm"
                     >
-                      ✅ Approve Draft
+                      Approve
                     </button>
                     <button
                       onClick={() => handleUpdateStatus(currentDraft.id, 'Rejected')}
                       className="btn btn-danger btn-sm"
                     >
-                      ❌ Reject
+                      Reject
                     </button>
                   </>
                 )}
@@ -491,11 +483,11 @@ export default function HomePage() {
           <div className="glass-card">
             <div className="card-header space-between">
               <div>
-                <h2>Marketing Content Pipeline & Audit Log</h2>
-                <p>Every draft is stored with ISO UTC timestamps and status tags.</p>
+                <h2>Content Governance & Audit Pipeline</h2>
+                <p>All AI-generated drafts are staged here for human verification before external distribution.</p>
               </div>
               <button onClick={fetchDrafts} className="btn btn-secondary btn-sm">
-                🔄 Refresh
+                Refresh
               </button>
             </div>
 
@@ -503,7 +495,7 @@ export default function HomePage() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Created At (ISO)</th>
+                    <th>Timestamp</th>
                     <th>Topic & Platform</th>
                     <th>Audience & Tone</th>
                     <th>Caption Preview</th>
@@ -514,14 +506,14 @@ export default function HomePage() {
                 <tbody>
                   {drafts.length === 0 ? (
                     <tr>
-                      <td colSpan={6} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-dim)' }}>
-                        No drafts recorded yet.
+                      <td colSpan={6} style={{ textAlign: 'center', padding: '30px', color: 'var(--text-tertiary)' }}>
+                        No drafts recorded yet. Generate your first campaign draft.
                       </td>
                     </tr>
                   ) : (
                     drafts.map(d => (
                       <tr key={d.id}>
-                        <td style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--text-dim)' }}>
+                        <td style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--text-tertiary)' }}>
                           {new Date(d.created_at).toLocaleString()}
                         </td>
                         <td>
@@ -530,9 +522,9 @@ export default function HomePage() {
                           <span className="badge">{d.platform}</span>
                         </td>
                         <td>
-                          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{d.audience}</span>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{d.audience}</span>
                           <br />
-                          <em style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{d.tone}</em>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{d.tone}</span>
                         </td>
                         <td>
                           <div className="truncate-text" title={d.caption}>
@@ -567,13 +559,13 @@ export default function HomePage() {
                               className="btn btn-success btn-sm"
                               onClick={() => handleUpdateStatus(d.id, 'Approved')}
                             >
-                              ✓
+                              Approve
                             </button>
                             <button
                               className="btn btn-danger btn-sm"
                               onClick={() => handleDeleteDraft(d.id)}
                             >
-                              🗑️
+                              Delete
                             </button>
                           </div>
                         </td>
@@ -591,20 +583,22 @@ export default function HomePage() {
           <div className="glass-card">
             <div className="card-header space-between">
               <div>
-                <h2>Brand Knowledge Base (RAG Context Store)</h2>
-                <p>Ground generative LLMs with persistent brand voice, local cultural idioms, and offer rules.</p>
+                <h2>Brand Knowledge Base (RAG)</h2>
+                <p>Ground generative models with persistent brand guidelines, local cultural context, and compliance standards.</p>
               </div>
               <button onClick={() => setShowAddKnowledge(true)} className="btn btn-primary btn-sm">
-                + Add Knowledge Doc
+                + Add Knowledge Document
               </button>
             </div>
 
             <div className="knowledge-grid">
               {knowledge.map(doc => (
                 <div key={doc.id} className="kb-card">
-                  <span className="kb-category">{doc.category}</span>
-                  <h3 className="kb-title">{doc.title}</h3>
-                  <p className="kb-content">{doc.content}</p>
+                  <div>
+                    <span className="kb-category">{doc.category}</span>
+                    <h3 className="kb-title">{doc.title}</h3>
+                    <p className="kb-content">{doc.content}</p>
+                  </div>
                   <div className="kb-footer">
                     <span>Updated: {new Date(doc.updated_at).toLocaleDateString()}</span>
                     <button
@@ -619,67 +613,6 @@ export default function HomePage() {
             </div>
           </div>
         )}
-
-        {/* TAB 4: ARCHITECTURE & DOCS */}
-        {activeTab === 'docs' && (
-          <div className="glass-card">
-            <div className="card-header">
-              <h2>Next.js Full-Stack Architecture</h2>
-              <p>Interaction between Next.js, n8n Cloud, Google Gemini, and Google Sheets</p>
-            </div>
-
-            <div className="diagram-container">
-              <div className="arch-flow">
-                <div className="arch-box">
-                  <span className="box-tag">Client</span>
-                  <h3>Next.js App Router</h3>
-                  <p>Campaign Studio, Phone Preview, Review Station</p>
-                </div>
-                <div className="arch-arrow">➔</div>
-                <div className="arch-box">
-                  <span className="box-tag">API Route</span>
-                  <h3>/api/generate</h3>
-                  <p>RAG context retrieval, Webhook bridge</p>
-                </div>
-                <div className="arch-arrow">➔</div>
-                <div className="arch-box">
-                  <span className="box-tag">Orchestrator</span>
-                  <h3>n8n Cloud</h3>
-                  <p>LangChain Chain + JavaScript Normalizer</p>
-                </div>
-                <div className="arch-arrow">➔</div>
-                <div className="arch-box">
-                  <span className="box-tag">AI Model</span>
-                  <h3>Google Gemini</h3>
-                  <p>Structured marketing copy</p>
-                </div>
-                <div className="arch-arrow">➔</div>
-                <div className="arch-box">
-                  <span className="box-tag">Data Store</span>
-                  <h3>Google Sheets</h3>
-                  <p>Append row marked Draft - Review Required</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="docs-grid">
-              <div className="doc-item">
-                <h3>RAG Implementation</h3>
-                <p>
-                  Retrieval-Augmented Generation (RAG) enriches prompts with local Addis Ababa cultural rules,
-                  compliance policies, and brand voice guidelines so copy is never generic.
-                </p>
-              </div>
-              <div className="doc-item">
-                <h3>Human-in-the-Loop Governance</h3>
-                <p>
-                  Every post draft is created with <code>status: 'Draft - Review Required'</code> so managers
-                  can inspect, refine, approve, or reject before any post goes live.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
 
       {/* Settings Modal */}
@@ -687,7 +620,7 @@ export default function HomePage() {
         <div className="modal-backdrop">
           <div className="modal-card">
             <div className="modal-header">
-              <h3>System Settings & n8n Bridge</h3>
+              <h3>System Settings & Integrations</h3>
               <button className="close-modal-btn" onClick={() => setShowSettings(false)}>
                 &times;
               </button>
@@ -701,7 +634,7 @@ export default function HomePage() {
                   onChange={e => setN8nWebhook(e.target.value)}
                   placeholder="https://your-n8n.app.n8n.cloud/webhook/generate-content"
                 />
-                <small className="helper-text">Triggers your n8n workflow directly via HTTP webhook!</small>
+                <small className="helper-text">Directly route generation tasks to your n8n workflow pipeline.</small>
               </div>
 
               <div className="form-group">
@@ -712,12 +645,12 @@ export default function HomePage() {
                   onChange={e => setGeminiKey(e.target.value)}
                   placeholder="AIzaSy..."
                 />
-                <small className="helper-text">Used if n8n Cloud is offline or webhook is not set.</small>
+                <small className="helper-text">Used if n8n Cloud is unreachable or webhook is unconfigured.</small>
               </div>
             </div>
             <div className="modal-footer">
               <button onClick={handleSaveSettings} className="btn btn-primary">
-                Save Settings
+                Save Changes
               </button>
             </div>
           </div>
@@ -737,7 +670,7 @@ export default function HomePage() {
             <form onSubmit={handleAddKnowledge}>
               <div className="modal-body">
                 <div className="form-group">
-                  <label>Title *</label>
+                  <label>Title</label>
                   <input
                     type="text"
                     value={newKbTitle}
@@ -747,7 +680,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Category *</label>
+                  <label>Category</label>
                   <select
                     value={newKbCategory}
                     onChange={e => setNewKbCategory(e.target.value)}
@@ -759,19 +692,19 @@ export default function HomePage() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Content / Rules *</label>
+                  <label>Content / Guidelines</label>
                   <textarea
                     rows={4}
                     value={newKbContent}
                     onChange={e => setNewKbContent(e.target.value)}
-                    placeholder="Enter brand rules or local Addis cultural idioms..."
+                    placeholder="Enter brand rules, regional cultural context, or compliance requirements..."
                     required
                   />
                 </div>
               </div>
               <div className="modal-footer">
                 <button type="submit" className="btn btn-primary">
-                  Add Document
+                  Save Document
                 </button>
               </div>
             </form>
@@ -783,7 +716,7 @@ export default function HomePage() {
       <div className="toast-container">
         {toasts.map(t => (
           <div key={t.id} className={`toast toast-${t.type}`}>
-            <span>{t.type === 'success' ? '✅' : t.type === 'error' ? '❌' : 'ℹ️'}</span> {t.message}
+            {t.message}
           </div>
         ))}
       </div>
